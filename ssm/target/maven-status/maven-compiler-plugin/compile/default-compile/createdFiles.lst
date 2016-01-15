@@ -1,0 +1,6 @@
+com\mycompany\ssm\commons\JsonReport.class
+com\mycompany\ssm\controller\testController.class
+com\mycompany\ssm\service\impl\UserServiceImpl.class
+com\mycompany\ssm\model\User.class
+com\mycompany\ssm\dao\UserDao.class
+com\mycompany\ssm\service\UserService.class
