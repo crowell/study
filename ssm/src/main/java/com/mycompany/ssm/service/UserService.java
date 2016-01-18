@@ -11,6 +11,9 @@ import com.mycompany.ssm.model.User;
 public interface UserService {
 	
 	public boolean addUser(User user);
+	public boolean deleteUser(int id);
+	public boolean updateUser(User user);
 	public List<User> queryUserList(User user);
+	public List<User> queryUserListByKey(String key);
 
 }

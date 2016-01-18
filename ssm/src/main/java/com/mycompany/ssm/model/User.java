@@ -6,61 +6,49 @@ package com.mycompany.ssm.model;
  */
 public class User {
 	
-	private Integer id;
+	private Integer address;
+	private Integer age;
+	private String id;
 	private String name;
 	private String sex;
-	private Integer age;
-	public User(String name, String sex, Integer age) {
+	public User() {
 		super();
-		this.name = name;
-		this.sex = sex;
-		this.age = age;
 	}
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getSex() {
-		return sex;
-	}
-	public void setSex(String sex) {
-		this.sex = sex;
+
+	public Integer getAddress() {
+		return address;
 	}
 	public Integer getAge() {
 		return age;
 	}
+
+	public String getName() {
+		return name;
+	}
+	public String getSex() {
+		return sex;
+	}
+	public void setAddress(Integer address) {
+		this.address = address;
+	}
 	public void setAge(Integer age) {
 		this.age = age;
 	}
-	public User() {
-		super();
-	}
-	public User(Integer id, String name, Integer age) {
-		super();
-		this.id = id;
+	
+	public void setName(String name) {
 		this.name = name;
-		this.age = age;
 	}
-	public User(Integer id, String name, String sex) {
-		super();
-		this.id = id;
-		this.name = name;
+	public void setSex(String sex) {
 		this.sex = sex;
 	}
-	public User(Integer id, String name, String sex, Integer age) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.sex = sex;
-		this.age = age;
+
+	public String getId() {
+		return id;
 	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+	
 
 }

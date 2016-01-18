@@ -23,7 +23,7 @@ public class testController {
 	@Autowired
 	UserService userService;
 	
-    @RequestMapping(value = "/get",produces = {"application/json;charset=UTF-8"})
+/*    @RequestMapping(value = "/get",produces = {"application/json;charset=UTF-8"})
     @ResponseBody
     public Object get(String firstnum,String lastnum) {
     	JsonReport jr = new JsonReport(); 
@@ -46,10 +46,74 @@ public class testController {
            jr.setErrorMsg(e.getMessage());
        }
     	   return jr;
-    }
+    }*/
     @RequestMapping(value="/add",produces = {"application/json;charset=UTF-8"})
     @ResponseBody
     public Object addUser(User user){
-   	
+		JsonReport jr = new JsonReport();
+		try{
+			userService.addUser(user);
+			jr.setData(userService.queryUserList(user));
+		}catch(Exception e){
+			jr.setSuccess(false);
+		jr.setData("error");
+		jr.setErrorMsg(e.getMessage());
+		}
+		return jr;
+    }
+    @RequestMapping(value="/update",produces ={"application/json;charset=UTF-8"})
+    @ResponseBody
+    public Object updateUser(User user){
+    	JsonReport jr = new JsonReport();
+    	try{
+    		userService.updateUser(user);
+    		jr.setData(userService.queryUserList(user));
+    	}catch(Exception e){
+    		jr.setSuccess(false);
+    		jr.setData("error");
+    		jr.setErrorMsg(e.getMessage());
+    	}
+    	return jr;
+    }
+    @RequestMapping(value="/delete",produces ={"application/json;charset=UTF-8"})
+    @ResponseBody
+    public Object deleteUserById(int id){
+    	JsonReport jr = new JsonReport();
+    	String s = "删除成功";
+    	try{
+    		userService.deleteUser(id);
+    		jr.setData(s);
+    	}catch(Exception e){
+    		jr.setSuccess(false);
+    		jr.setData("error");
+    		jr.setErrorMsg(e.getMessage());
+    	}
+    	return jr;
+    }
+    @RequestMapping(value="/queryUser",produces ={"application/json;charset=UTF-8"})
+    @ResponseBody
+    public Object queryUserList(User user){
+    	JsonReport jsonReport = new JsonReport();
+    	try{
+    		jsonReport.setData(userService.queryUserList(user));
+    	}catch(Exception e){
+    		jsonReport.setSuccess(false);
+    		jsonReport.setData("error");
+    		jsonReport.setErrorMsg(e.getMessage());
+    	}
+    	return jsonReport;
+    }
+    @RequestMapping(value="/queryUserByKey",produces ={"application/json;charset=UTF-8"})
+    @ResponseBody
+    public Object queryUserListByKey(String key){
+    	JsonReport jsonReport = new JsonReport();
+    	try{
+    		jsonReport.setData(userService.queryUserListByKey(key));
+    	}catch(Exception e){
+    		jsonReport.setSuccess(false);
+    		jsonReport.setData("error");
+    		jsonReport.setErrorMsg(e.getMessage());
+    	}
+    	return jsonReport;
     }
 }

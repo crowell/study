@@ -16,5 +16,6 @@ public interface UserDao {
 	public int updateUser(User user);
 	public User getUserById(int id);
 	public List<User> selectUserList(User user);
+	public List<User> selectUserListByKey(String key);
 
 }
