@@ -3,11 +3,9 @@ package com.mycompany.ssm.service.impl;
 import java.util.List;
 
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-
-import com.mycompany.ssm.commons.JsonReport;
+import com.mycompany.ssm.commons.Condition;
 import com.mycompany.ssm.commons.UUIDUtil;
 import com.mycompany.ssm.dao.UserDao;
 import com.mycompany.ssm.model.User;
@@ -47,16 +45,23 @@ public class UserServiceImpl implements UserService{
 		return result;
 	}
 	
-	public boolean deleteUser(int id){
+	public boolean deleteUser(String id){
 		Assert.notNull(userDao.getUserById(id),"该用户不存在");
 		boolean result = userDao.deleteUserById(id)>0;
 		return result;
 	}
 	
-	public List<User> queryUserListByKey(String key){
-		Assert.notNull(key, "没有找到用户");
-		List<User> l = userDao.selectUserListByKey(key);
+	public List<User> queryUserListByKey(String queryCondition){
+		List<User> l = userDao.selectUserListByKey(queryCondition);
+		Assert.notNull(l, "没有找到用户");
+		/*List<User> l = userDao.selectUserListByKey(queryCondition);*/
 		return l;
+	}
+	
+	public User getUserById(String id){
+		Assert.notNull(userDao.getUserById(id),"查询失败，用户不存在");
+		User user = userDao.getUserById(id);
+		return user;
 	}
 
 }

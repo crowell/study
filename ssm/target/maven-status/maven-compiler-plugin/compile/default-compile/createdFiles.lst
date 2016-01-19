@@ -1,6 +1,9 @@
-com\mycompany\ssm\commons\JsonReport.class
+com\mycompany\ssm\commons\Condition.class
 com\mycompany\ssm\controller\testController.class
 com\mycompany\ssm\service\impl\UserServiceImpl.class
+com\mycompany\ssm\commons\UUIDUtil.class
+com\mycompany\ssm\service\UserService.class
+com\mycompany\ssm\commons\JsonReport.class
+com\mycompany\ssm\commons\AdressToCity.class
 com\mycompany\ssm\model\User.class
 com\mycompany\ssm\dao\UserDao.class
-com\mycompany\ssm\service\UserService.class

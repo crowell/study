@@ -6,10 +6,10 @@
         <!-- <selectKey ReturnType="int">
             
         </selectKey> -->
-        INSERT INTO user(name,sex,age,address)VALUES(#{name},#{sex},#{age},#{address})
+        INSERT INTO user(id,name,sex,age,address)VALUES(#{id},#{name},#{sex},#{age},#{address})  
     </insert>
     
-    <delete id="deleteUserById" parameterType="int">
+    <delete id="deleteUserById" parameterType="String">
         DELETE FROM user WHERE id=#{id}
     </delete>
     
@@ -32,7 +32,7 @@
         WHERE id=#{id}
     </update>
     
-    <select id="getUserById" parameterType="int" 
+    <select id="getUserById" parameterType="String" 
         resultType="com.mycompany.ssm.model.User">
         SELECT * FROM user WHERE id=#{id}
     </select>
@@ -42,42 +42,43 @@
         SELECT * FROM user 
         <where>
             <if test="id!=null and id!=''">
-                id=#{id};
+                id=#{id}
             </if>
             <if test="name!=null and name!=''">
-                name=#{name}
+                AND name=#{name}
             </if>
             <if test="sex!=null and sex!=''">
-                sex=#{sex}
+                AND sex=#{sex}
             </if>
-            <if test="age!=null and age!=''">
-                age=#{age}
+            <if test="age!=null">
+                AND age=#{age}
             </if>
             <if test="address!=null and address!=''">
-                address=#{address}
+                AND address=#{address}
             </if>
         </where>
     </select>
     
-    <select id="selectUserListByKey" parameterType="String">
+    <select id="selectUserListByKey" parameterType="com.mycompany.ssm.commons"
+        resultType="com.mycompany.ssm.model.User">
         SELECT * FROM user 
         <where>
            <choose>
-               <when test="key!=null and key=''">
-                   id LIKE CONCAT('%',#{key}'%')
+               <when test="queryCondition!=null and queryCondition!=''">
+                   id LIKE CONCAT(CONCAT('%',#{queryCondition}),'%')
                </when>
-               <when test="key!=null and key=''">
-                   name LIKE CONCAT('%',#{key}'%')
-               </when>
-               <when test="key!=null and key=''">
-                   sex LIKE CONCAT('%',#{key}'%')
-               </when>
-               <when test="key!=null and key=''">
-                   age LIKE CONCAT('%',#{key}'%')
-               </when>
-               <when test="key!=null and key=''">
-                   address LIKE CONCAT('%',#{key}'%')
-               </when>
+<!--                <when test="queryCondition!=null and queryCondition!=''"> -->
+<!--                    OR name LIKE CONCAT(CONCAT('%',#{queryCondition}),'%') -->
+<!--                </when> -->
+<!--                <when test="queryCondition!=null and queryCondition!=''"> -->
+<!--                    OR sex LIKE CONCAT(CONCAT('%',#{queryCondition}),'%') -->
+<!--                </when> -->
+<!--                <when test="queryCondition!=null and queryCondition!=''"> -->
+<!--                    OR age LIKE CONCAT(CONCAT('%',#{queryCondition}),'%') -->
+<!--                </when> -->
+<!--                <when test="queryCondition!=null and queryCondition!=''"> -->
+<!--                    OR address LIKE CONCAT(CONCAT('%',#{queryCondition}),'%') -->
+<!--                </when> -->
            </choose>
         </where>
     </select>

@@ -1,5 +1,6 @@
 package com.mycompany.ssm.controller;
 
+import com.mycompany.ssm.commons.Condition;
 import com.mycompany.ssm.commons.JsonReport;
 import com.mycompany.ssm.model.User;
 import com.mycompany.ssm.service.UserService;
@@ -8,11 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.util.Assert;
-
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.List;
 
 /**
  * Created by JinBingBing on 2016/1/14.
@@ -53,7 +49,7 @@ public class testController {
 		JsonReport jr = new JsonReport();
 		try{
 			userService.addUser(user);
-			jr.setData(userService.queryUserList(user));
+			jr.setData(userService.getUserById(user.getId()));
 		}catch(Exception e){
 			jr.setSuccess(false);
 		jr.setData("error");
@@ -77,7 +73,7 @@ public class testController {
     }
     @RequestMapping(value="/delete",produces ={"application/json;charset=UTF-8"})
     @ResponseBody
-    public Object deleteUserById(int id){
+    public Object deleteUserById(String id){
     	JsonReport jr = new JsonReport();
     	String s = "删除成功";
     	try{
@@ -105,10 +101,25 @@ public class testController {
     }
     @RequestMapping(value="/queryUserByKey",produces ={"application/json;charset=UTF-8"})
     @ResponseBody
-    public Object queryUserListByKey(String key){
+    public Object queryUserListByKey(String queryCondition){
     	JsonReport jsonReport = new JsonReport();
     	try{
-    		jsonReport.setData(userService.queryUserListByKey(key));
+    		jsonReport.setData(userService.queryUserListByKey(queryCondition));
+    	}catch(Exception e){
+    		jsonReport.setSuccess(false);
+    		jsonReport.setData("error");
+    		jsonReport.setErrorMsg(e.getMessage());
+    	}
+    	return jsonReport;
+    }
+    @RequestMapping(value="/getUser",produces ={"application/json;charset=UTF-8"})
+    @ResponseBody
+    public Object getUserById(String id){
+    	JsonReport jsonReport = new JsonReport();
+    	User user = new User();
+    	try{
+    		user = userService.getUserById(id);
+    		jsonReport.setData(user);
     	}catch(Exception e){
     		jsonReport.setSuccess(false);
     		jsonReport.setData("error");
