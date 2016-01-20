@@ -1,6 +1,5 @@
 package com.mycompany.ssm.controller;
 
-import com.mycompany.ssm.commons.Condition;
 import com.mycompany.ssm.commons.JsonReport;
 import com.mycompany.ssm.model.User;
 import com.mycompany.ssm.service.UserService;

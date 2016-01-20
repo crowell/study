@@ -2,7 +2,6 @@ package com.mycompany.ssm.service;
 
 import java.util.List;
 
-import com.mycompany.ssm.commons.Condition;
 import com.mycompany.ssm.model.User;
 
 /**

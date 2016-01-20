@@ -5,11 +5,15 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import com.mycompany.ssm.commons.Condition;
+
+import com.mycompany.ssm.commons.SerializingUtil;
 import com.mycompany.ssm.commons.UUIDUtil;
 import com.mycompany.ssm.dao.UserDao;
 import com.mycompany.ssm.model.User;
 import com.mycompany.ssm.service.UserService;
+
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
 
@@ -22,7 +26,9 @@ public class UserServiceImpl implements UserService{
 
     @Resource
 	private UserDao userDao;
-
+    
+    @Resource
+    private JedisPool jedisPool;
 	
 	public boolean addUser(User user){
 		Assert.notNull(user,"用户添加失败");
@@ -53,14 +59,26 @@ public class UserServiceImpl implements UserService{
 	
 	public List<User> queryUserListByKey(String queryCondition){
 		List<User> l = userDao.selectUserListByKey(queryCondition);
-		Assert.notNull(l, "没有找到用户");
-		/*List<User> l = userDao.selectUserListByKey(queryCondition);*/
+		Assert.notEmpty(l, "没有找到用户");
 		return l;
 	}
 	
 	public User getUserById(String id){
-		Assert.notNull(userDao.getUserById(id),"查询失败，用户不存在");
-		User user = userDao.getUserById(id);
+		User user = null;
+		try {
+			Jedis jedis = jedisPool.getResource();
+			byte[] bytes = jedis.get(SerializingUtil.serialize(id));
+			if(bytes==null){
+				Assert.notNull(userDao.getUserById(id),"查询失败，用户不存在");
+			    user = userDao.getUserById(id);
+			    jedis.set(SerializingUtil.serialize(id), SerializingUtil.serialize(user));
+			}else{
+				user = (User)SerializingUtil.deserialize(bytes);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return user;
 	}
 

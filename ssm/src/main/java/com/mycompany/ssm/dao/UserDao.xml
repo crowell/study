@@ -8,8 +8,9 @@
         </selectKey> -->
         INSERT INTO user(id,name,sex,age,address)VALUES(#{id},#{name},#{sex},#{age},#{address})  
     </insert>
+   
     
-    <delete id="deleteUserById" parameterType="String">
+    <delete id="deleteUserById" parameterType="String" >
         DELETE FROM user WHERE id=#{id}
     </delete>
     
@@ -59,26 +60,18 @@
         </where>
     </select>
     
-    <select id="selectUserListByKey" parameterType="com.mycompany.ssm.commons"
+    <select id="selectUserListByKey" parameterType="String"
         resultType="com.mycompany.ssm.model.User">
         SELECT * FROM user 
         <where>
            <choose>
                <when test="queryCondition!=null and queryCondition!=''">
                    id LIKE CONCAT(CONCAT('%',#{queryCondition}),'%')
+                   OR name LIKE CONCAT(CONCAT('%',#{queryCondition}),'%')
+                   OR sex LIKE CONCAT(CONCAT('%',#{queryCondition}),'%')
+                   OR age LIKE CONCAT(CONCAT('%',#{queryCondition}),'%')
+                   OR address LIKE CONCAT(CONCAT('%',#{queryCondition}),'%')
                </when>
-<!--                <when test="queryCondition!=null and queryCondition!=''"> -->
-<!--                    OR name LIKE CONCAT(CONCAT('%',#{queryCondition}),'%') -->
-<!--                </when> -->
-<!--                <when test="queryCondition!=null and queryCondition!=''"> -->
-<!--                    OR sex LIKE CONCAT(CONCAT('%',#{queryCondition}),'%') -->
-<!--                </when> -->
-<!--                <when test="queryCondition!=null and queryCondition!=''"> -->
-<!--                    OR age LIKE CONCAT(CONCAT('%',#{queryCondition}),'%') -->
-<!--                </when> -->
-<!--                <when test="queryCondition!=null and queryCondition!=''"> -->
-<!--                    OR address LIKE CONCAT(CONCAT('%',#{queryCondition}),'%') -->
-<!--                </when> -->
            </choose>
         </where>
     </select>
