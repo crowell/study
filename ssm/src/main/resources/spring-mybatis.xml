@@ -10,70 +10,118 @@
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
     <!--读取jdbc配置文件-->
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <!-- <property name="location" value="classpath:jdbc.properties" /> -->
-        <property name="ignoreUnresolvablePlaceholders" value="true" />
+        <!-- 使用location属性定义单个配置文件 -->
+        <property name="location" value="classpath:jdbc.properties" />
+        <!-- 使用locations属性定义多个配置文件 -->
+        <!-- <property name="ignoreUnresolvablePlaceholders" value="true" />
 		<property name="locations">
 		<list>
 		<value>classpath:jdbc.properties</value>
 		<value>classpath:redis.properties</value>
 		</list>
-		</property>
+		</property> -->
     </bean> 
-
+    <!-- 配置数据源，从上面配置文件读取 -->
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
           init-method="init" destroy-method="close">
+        <!-- 数据库驱动 -->
         <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <!-- 基本属性 url，username，password -->
         <property name="url" value="${jdbc.url}" />
         <property name="username" value="${jdbc.username}" />
         <property name="password" value="${jdbc.password}" />
-        
+        <!-- 配置初始化大小、最大、最小 -->
         <property name="initialSize" value="10"/>
         <property name="maxActive" value="50" />
         <property name="minIdle" value="1" />
-
+        <!-- 配置获取连接等待超时的时间 单位是毫秒 -->
         <property name="maxWait" value="60000" />
-
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
         <property name="timeBetweenLogStatsMillis" value="60000" />
-
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
         <property name="minEvictableIdleTimeMillis" value="300000" />
     </bean>
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource" />
-
+        <!-- 配置扫描Domain的包路径 -->
         <property name="typeAliasesPackage" value="com.mycompany.ssm" />
+        <!-- 配置扫描Mapper XML的位置 -->
+		<!-- <property name="mapperLocations"> -->
+		<!-- <array> -->
+		<!-- <value>classpath:com/start/demo/user/dao/*.xml</value> -->
+		<!-- </array> -->
+		<!-- </property> -->
     </bean>
-
+    <!-- 配置扫描Mapper接口的包路径 -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.mycompany.ssm.dao" />
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
     </bean>
-
+    <!-- 定义事务管理器 -->
     <bean id="transcationManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource" />
     </bean>
-    
+    <!-- <bean id ="jedisDemo" class="com.mycompany.ssm.service.impl.JedisDemo">
+        <property name="jpc" ref="jedisPoolConfig"/>
+        <property name="jp" ref= "jedisPool"/>
+    </bean> -->
+    <!-- redis链接池配置调优 -->
     <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">  
-          <property name="maxTotal" value="${redis.pool.maxActive}"/>
-          <property name="maxIdle" value="${redis.pool.maxIdle}"/>  
-          <!-- <property name="minIdle" value="${redis.pool.minIdle}"/>   -->
-          <property name="maxWaitMillis" value="${redis.pool.maxWait}"/>  
-          <property name="testOnBorrow" value="${redis.pool.testOnBorrow}"/>  
-          <!-- <property name="testOnReturn" value="${redis.pool.testOnReturn}"/> -->  
-      </bean>  
+        <property name="maxTotal" value="300"/>
+        <property name="maxIdle" value="20"/>  
+        <property name="minIdle" value="5"/>  
+        <property name="maxWaitMillis" value="3000"/>  
+        <property name="testOnBorrow" value="true"/>  
+        <property name="testOnReturn" value="true"/>  
+    </bean>  
         
-      <!-- redis的连接池pool，不是必选项：timeout/password  -->  
-      <bean id = "jedisPool" class="redis.clients.jedis.JedisPool">  
-        <property name="poolConfig" ref="jedisPoolConfig" />
-		<property name="port" value="${redis.port}" />
-		<property name="hostName" value="${redis.host}" />
-		<!-- <property name="password" value="${redis.password}" /> -->
-		<property name="timeout" value="${redis.timeout}" />
-      </bean> 
-
+    <!-- redis的连接池pool，不是必选项：timeout/password   --> 
+    <bean id = "jedisPool" class="redis.clients.jedis.JedisPool">  
+        <constructor-arg index="0" ref="jedisPoolConfig"/>  
+        <constructor-arg index="1" value="127.0.0.1"/>  
+        <constructor-arg index="2" value="6379" type="int"/>  
+        <constructor-arg index="3" value="3000" type="int"/>  
+        <!-- <constructor-arg index="4" value="${redis.password}"/> -->
+    </bean> 
+    <!-- quartz配置调度对象 -->
+    <!-- 要调用的工作类 -->
+    <bean id="quartzJob" class="com.mycompany.ssm.service.impl.testUser"></bean>
+    <!-- 定义调用对象和调用对象的方法 -->
+    <bean id="jobtask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <!-- 调用的类 -->
+        <property name="targetObject">
+            <ref bean="quartzJob"/>
+        </property>
+        <!-- 调用类中的方法 -->
+       <property name="targetMethod">
+            <value>insertUser</value>
+        </property>
+    </bean>
+    <!-- 定义触发时间 -->
+    <bean id="doTime" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="jobtask"/>
+        </property>
+        <!-- cron表达式 -->
+        <property name="cronExpression">
+            <value>0/5 * * * * ?</value>
+        </property>
+    </bean>
+    <!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序 --> 
+    <bean id="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="doTime"/>
+            </list>
+        </property>
+    </bean>
+    <!-- 支持事务注解的（@Transactional） -->
     <tx:annotation-driven />
-
+    <!-- 定义事务策略 -->
     <tx:advice id="txAdvice" transaction-manager="transcationManager">
+        <!-- 所有以query开头的方法都是只读的 -->
+		<!-- spring事务传播 PROPAGATION_SUPPORTS支持当前事务，如果当前没有事务，就以非事务方式执行 -->
         <tx:attributes>
             <tx:method name="query*" read-only="true"/>
             <tx:method name="get*" propagation="SUPPORTS" read-only="true" />
@@ -82,7 +130,8 @@
             <tx:method name="query*" propagation="SUPPORTS" read-only="true" />
             <tx:method name="find*" propagation="SUPPORTS" read-only="true" />
             <tx:method name="list*" propagation="SUPPORTS" read-only="true" />
-            
+            <!--其他方法使用默认事务策略 -->
+			<!--spring事务传播，PROPAGATION_REQUIRED如果当前没有事务，就新建一个事务，如果已经存在一个事务中，加入到这个事务中 -->
             <tx:method name="save*" propagation="REQUIRED" />
             <tx:method name="insert*" propagation="REQUIRED" />
             <tx:method name="add*" propagation="REQUIRED" />
@@ -100,8 +149,11 @@
     </tx:advice>
 
     <aop:config>
+        <!-- pointcut元素定义一个切入点，execution中的第一个星号 用以匹配方法的返回类型， 这里星号表明匹配所有返回类型。 com.abc.dao.*.*(..)表明匹配com.jutudi.mybatis.dao包下的所有类的所有 
+			方法 -->
         <aop:pointcut id="mypointcut"
-                      expression="execution(* com.mycompany.ssm.service.*.*(..))" />
+            expression="execution(* com.mycompany.ssm.service.*.*(..))" />
+        <!--将定义好的事务处理策略应用到上述的切入点 -->
         <aop:advisor advice-ref="txAdvice" pointcut-ref="mypointcut" />
     </aop:config>
 

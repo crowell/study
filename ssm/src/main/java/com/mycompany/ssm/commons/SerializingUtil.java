@@ -5,11 +5,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class SerializingUtil {
+public class SerializingUtil implements Serializable {
 	
 	 private static Log logger = LogFactory.getLog(SerializingUtil.class);  
      

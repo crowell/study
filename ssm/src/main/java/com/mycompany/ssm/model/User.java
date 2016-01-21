@@ -1,10 +1,12 @@
 package com.mycompany.ssm.model;
 
+import java.io.Serializable;
+
 /**
  * @author JinBingBing
  *
  */
-public class User {
+public class User implements Serializable{
 	
 	private Integer address;
 	private Integer age;
@@ -13,6 +15,9 @@ public class User {
 	private String sex;
 	public User() {
 		super();
+	}
+	public User(String name){
+		this.name = name;
 	}
 
 	public Integer getAddress() {

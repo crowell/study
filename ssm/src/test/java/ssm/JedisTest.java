@@ -1,11 +1,6 @@
 package ssm;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
-
-import com.sun.tools.javac.util.Assert;
-
 import redis.clients.jedis.Jedis;
 
 public class JedisTest {
