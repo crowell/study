@@ -62,10 +62,7 @@
     <bean id="transcationManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource" />
     </bean>
-    <!-- <bean id ="jedisDemo" class="com.mycompany.ssm.service.impl.JedisDemo">
-        <property name="jpc" ref="jedisPoolConfig"/>
-        <property name="jp" ref= "jedisPool"/>
-    </bean> -->
+
     <!-- redis链接池配置调优 -->
     <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">  
         <property name="maxTotal" value="300"/>
@@ -84,38 +81,6 @@
         <constructor-arg index="3" value="3000" type="int"/>  
         <!-- <constructor-arg index="4" value="${redis.password}"/> -->
     </bean> 
-    <!-- quartz配置调度对象 -->
-    <!-- 要调用的工作类 -->
-    <bean id="quartzJob" class="com.mycompany.ssm.service.impl.testUser"></bean>
-    <!-- 定义调用对象和调用对象的方法 -->
-    <bean id="jobtask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <!-- 调用的类 -->
-        <property name="targetObject">
-            <ref bean="quartzJob"/>
-        </property>
-        <!-- 调用类中的方法 -->
-       <property name="targetMethod">
-            <value>insertUser</value>
-        </property>
-    </bean>
-    <!-- 定义触发时间 -->
-    <bean id="doTime" class="org.springframework.scheduling.quartz.CronTriggerBean">
-        <property name="jobDetail">
-            <ref bean="jobtask"/>
-        </property>
-        <!-- cron表达式 -->
-        <property name="cronExpression">
-            <value>0/5 * * * * ?</value>
-        </property>
-    </bean>
-    <!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序 --> 
-    <bean id="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-        <property name="triggers">
-            <list>
-                <ref bean="doTime"/>
-            </list>
-        </property>
-    </bean>
     <!-- 支持事务注解的（@Transactional） -->
     <tx:annotation-driven />
     <!-- 定义事务策略 -->

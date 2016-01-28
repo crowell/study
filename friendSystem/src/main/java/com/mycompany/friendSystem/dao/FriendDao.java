@@ -1,6 +1,7 @@
 package com.mycompany.friendSystem.dao;
 
 import com.mycompany.friendSystem.model.Friend;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -11,5 +12,5 @@ public interface FriendDao {
     public int insertFriend(Friend friend);
     public int updateFriend(Friend friend);
     public int deleteFriendById(String id);
-    public List<Friend> getFriendByRelation_id(String relation_id);
+    public List<Friend> getFriendByRelation_id( String relation_id);
 }

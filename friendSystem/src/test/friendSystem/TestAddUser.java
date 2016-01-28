@@ -1,5 +1,6 @@
 package friendSystem;
 
+import com.mycompany.friendSystem.dao.UserDao;
 import com.mycompany.friendSystem.model.User;
 import com.mycompany.friendSystem.service.UserService;
 import org.junit.Test;

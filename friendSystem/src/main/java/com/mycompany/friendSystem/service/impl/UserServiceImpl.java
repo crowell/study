@@ -2,7 +2,9 @@ package com.mycompany.friendSystem.service.impl;
 
 import com.mycompany.friendSystem.commons.SerializingUtil;
 import com.mycompany.friendSystem.commons.UUIDUtil;
+import com.mycompany.friendSystem.dao.RelationDao;
 import com.mycompany.friendSystem.dao.UserDao;
+import com.mycompany.friendSystem.model.Relation;
 import com.mycompany.friendSystem.model.User;
 import com.mycompany.friendSystem.service.UserService;
 import org.springframework.stereotype.Service;
@@ -22,8 +24,8 @@ public class UserServiceImpl implements UserService {
     @Resource
     public UserDao userDao;
 
-/*    @Resource
-    public RelationDao relationDao;*/
+    @Resource
+    public RelationDao relationDao;
 
     @Resource
     private JedisPool jedisPool;
@@ -38,11 +40,17 @@ public class UserServiceImpl implements UserService {
         if(user.getName()==null)
             user.setName(user.getUsername());
         boolean result = userDao.insertUser(user)>0;
-        /*if(result){
-            relationDao.insertRelation(DefaultRelation.getDefaultRelationShip("我的好友",user));
-            relationDao.insertRelation(DefaultRelation.getDefaultRelationShip("黑名单",user));
-            relationDao.insertRelation(DefaultRelation.getDefaultRelationShip("陌生人",user));
-        }*/
+        if(result){
+        	Relation r1 = new Relation();
+        	Relation r2 = new Relation();
+        	Relation r3 = new Relation();
+        	DefaultRelation.getDefaultRelationShip("我的好友", user, r1);
+        	DefaultRelation.getDefaultRelationShip("黑名单", user, r2);
+        	DefaultRelation.getDefaultRelationShip("陌生人", user, r3);
+            relationDao.insertRelation(r1);
+            relationDao.insertRelation(r2);
+            relationDao.insertRelation(r3);
+        }
         return result;
     }
     /*

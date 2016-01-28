@@ -67,13 +67,13 @@ public class userController {
     public Object queryUserList(User user){
     	JsonReport jr = new JsonReport();
     	try{
-    		jsonReport.setData(userService.queryUserList(user));
+    		jr.setData(userService.queryUserList(user));
     	}catch(Exception e){
-    		jsonReport.setSuccess(false);
-    		jsonReport.setData("error");
-    		jsonReport.setErrorMsg(e.getMessage());
+    		jr.setSuccess(false);
+    		jr.setData("error");
+    		jr.setErrorMsg(e.getMessage());
     	}
-    	return jsonReport;
+    	return jr;
     }
     @RequestMapping(value="/queryUserByCondition",produces ={"application/json;charset=UTF-8"})
     @ResponseBody

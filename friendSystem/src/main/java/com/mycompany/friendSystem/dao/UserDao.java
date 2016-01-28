@@ -1,6 +1,7 @@
 package com.mycompany.friendSystem.dao;
 
 import com.mycompany.friendSystem.model.User;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -15,5 +16,5 @@ public interface UserDao {
     public User getUserById(String id);
     public User getUserByUsername(String username);
     public List<User> selectUserList(User user);
-    public List<User> selectUserByCondition(String queryCondition);
+    public List<User> selectUserByCondition(@Param(value = "queryCondition") String queryCondition);
 }
