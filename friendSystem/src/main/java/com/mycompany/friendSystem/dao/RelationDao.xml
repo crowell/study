@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mycompany.friendSystem.dao.RelationDao">
+    <insert id="insertRelation" parameterType="com.mycompany.friendSystem.model.Relation">
+        INSERT INTO relation(id,user_id,relationship)VALUES (#{id},#{user_id},#{relationship})
+    </insert>
+
+    <update id="updateRelation" parameterType="com.mycompany.friendSystem.model.Relation">
+        UPDATE relation SET relationship=#{relationshp} WHERE id=#{id}
+    </update>
+
+    <delete id="deleteRelationById" parameterType="String">
+        DELETE FROM relation WHERE id=#{id}
+    </delete>
+
+    <select id="getRelationByUser_id" parameterType="String"
+            resultType="com.mycompany.friendSystem.model.Relation">
+        SELECT * FROM relation WHERE user_id=#{user_id}
+    </select>
+</mapper>

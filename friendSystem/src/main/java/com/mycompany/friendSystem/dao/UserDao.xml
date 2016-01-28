@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mycompany.friendSystem.dao.UserDao">
+    <insert id="insertUser" parameterType="com.mycompany.friendSystem.model.User">
+        INSERT INTO user(id,username,password,name,age,sex)VALUES (#{id},#{username},#{password},#{name},#{age},#{sex})
+    </insert>
+
+    <delete id="deleteUserById" parameterType="String">
+        DELETE FROM user WHERE id=#{id}
+    </delete>
+
+    <update id="updateUser" parameterType="com.mycompany.friendSystem.model.User">
+        UPDATE user
+        <set>
+            <if test="username!=null and username!=''">
+                username=#{username}
+            </if>
+            <if test="password!=null and username!=''">
+               AND password=#{password}
+            </if>
+            <if test="name!=null and name!=''">
+               AND name=#{name}
+            </if>
+            <if test="sex!=null and sex!=''">
+                AND sex=#{sex}
+            </if>
+            <if test="age=null and age!=''">
+                AND age=#{age}
+            </if>
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <select id="getUserById" parameterType="String"
+            resultType="com.mycompany.friendSystem.model.User">
+        SELECT * FROM user WHERE id=#{id}
+    </select>
+
+    <select id="getUserByUsername" parameterType="String"
+            resultType="com.mycompany.friendSystem.model.User">
+        SELECT * FROM user WHERE username=#{username}
+    </select>
+
+    <select id="selectUserList" parameterType="com.mycompany.friendSystem.model.User"
+            resultType="com.mycompany.friendSystem.model.User">
+        SELECT * FROM user
+        <where>
+            <if test="id!=null and id!=''">
+                id=#{id}
+            </if>
+            <if test="name!=null and name!=''">
+                AND name=#{name}
+            </if>
+            <if test="sex!=null and sex!=''">
+                AND sex=#{sex}
+            </if>
+            <if test="age!=null">
+                AND age=#{age}
+            </if>
+            <if test="address!=null and address!=''">
+                AND address=#{address}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectUserByCondition" parameterType="String"
+            resultType="com.mycompany.friendSystem.model.User">
+        SELECT * FROM user
+        <where>
+            <choose>
+                <when test="queryCondition!=null and queryCondition!=''">
+                    username LIKE CONCAT(CONCAT('%',#{queryCondition}),'%')
+                    OR name LIKE CONCAT(CONCAT('%',#{queryCondition}),'%')
+                    OR sex LIKE CONCAT(CONCAT('%',#{queryCondition}),'%')
+                    OR age LIKE CONCAT(CONCAT('%',#{queryCondition}),'%')
+                    OR address LIKE CONCAT(CONCAT('%',#{queryCondition}),'%')
+                </when>
+            </choose>
+        </where>
+    </select>
+
+</mapper>

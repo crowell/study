@@ -1,0 +1,7 @@
+com\mycompany\friendSystem\commons\SerializingUtil.class
+com\mycompany\friendSystem\model\User.class
+com\mycompany\friendSystem\commons\UUIDUtil.class
+com\mycompany\friendSystem\service\impl\DefaultRelation.class
+com\mycompany\friendSystem\commons\JsonReport.class
+com\mycompany\friendSystem\model\Friend.class
+com\mycompany\friendSystem\model\Relation.class

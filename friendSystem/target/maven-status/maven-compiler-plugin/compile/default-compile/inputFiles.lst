@@ -1,0 +1,13 @@
+E:\idea_work\friendSystem\src\main\java\com\mycompany\friendSystem\commons\UUIDUtil.java
+E:\idea_work\friendSystem\src\main\java\com\mycompany\friendSystem\service\impl\DefaultRelation.java
+E:\idea_work\friendSystem\src\main\java\com\mycompany\friendSystem\model\Friend.java
+E:\idea_work\friendSystem\src\main\java\com\mycompany\friendSystem\dao\RelationDao.java
+E:\idea_work\friendSystem\src\main\java\com\mycompany\friendSystem\service\UserService.java
+E:\idea_work\friendSystem\src\main\java\com\mycompany\friendSystem\model\User.java
+E:\idea_work\friendSystem\src\main\java\com\mycompany\friendSystem\commons\SerializingUtil.java
+E:\idea_work\friendSystem\src\main\java\com\mycompany\friendSystem\controller\userController.java
+E:\idea_work\friendSystem\src\main\java\com\mycompany\friendSystem\service\impl\UserServiceImpl.java
+E:\idea_work\friendSystem\src\main\java\com\mycompany\friendSystem\dao\FriendDao.java
+E:\idea_work\friendSystem\src\main\java\com\mycompany\friendSystem\dao\UserDao.java
+E:\idea_work\friendSystem\src\main\java\com\mycompany\friendSystem\model\Relation.java
+E:\idea_work\friendSystem\src\main\java\com\mycompany\friendSystem\commons\JsonReport.java
