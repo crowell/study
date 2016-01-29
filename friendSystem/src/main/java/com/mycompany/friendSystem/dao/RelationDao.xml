@@ -13,6 +13,10 @@
         DELETE FROM relation WHERE id=#{id}
     </delete>
 
+    <delete id="deleteRelationBuUser_id" parameterType="String">
+        DELETE FROM relation WHERE user_id=#{user_id}
+    </delete>
+
     <select id="queryRelationByUser_id" parameterType="String"
             resultType="com.mycompany.friendSystem.model.Relation">
         SELECT * FROM relation WHERE user_id=#{user_id}

@@ -9,7 +9,8 @@ import java.util.List;
  */
 public interface RelationService {
     public boolean insertRelation(Relation relation);
-    public boolean deleteRelation(String id);
+    public boolean deleteRelationById(String id);
+    public boolean deleteRelationByUser_id(String user_id);
     public boolean updateRelation(Relation relation);
     public Relation getRelation(String id);
     public List<Relation> queryRelationList(String user_id);

@@ -1,8 +1,13 @@
 package com.mycompany.friendSystem.service.impl;
 
 import com.mycompany.friendSystem.commons.UUIDUtil;
+import com.mycompany.friendSystem.dao.FriendDao;
 import com.mycompany.friendSystem.dao.RelationDao;
+import com.mycompany.friendSystem.dao.UserDao;
+import com.mycompany.friendSystem.model.Friend;
 import com.mycompany.friendSystem.model.Relation;
+import com.mycompany.friendSystem.model.User;
+import com.mycompany.friendSystem.service.RelationService;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
@@ -11,10 +16,16 @@ import java.util.*;
 /**
  * Created by JinBingBing on 2016/1/28.
  */
-public class RelationServiceImpl {
+public class RelationServiceImpl implements RelationService{
 
     @Resource
-    private RelationDao relationDao;
+    RelationDao relationDao;
+
+    @Resource
+    UserDao userDao;
+
+    @Resource
+    FriendDao friendDao;
     /*
     * 新建好友列表
     * */
@@ -34,11 +45,24 @@ public class RelationServiceImpl {
     /*
     * 删除好友列表
     * */
-    public boolean deleteRelation(String id){
+    public boolean deleteRelationById(String id){
         Assert.notNull(id,"列表id不能为空");
         Relation relation = relationDao.getRelationById(id);
         Assert.notNull(relation,"列表不存在");
+        List<Friend> friendList = friendDao.queryFriendByRelation_id(id);
+        Assert.isNull(friendList,"分组不为空，无法删除");
         boolean result = relationDao.deleteRelationById(id)>0;
+
+        return result;
+    }
+    /*
+    * 清空用户好友列表
+    * */
+    public boolean deleteRelationByUser_id(String user_id){
+        Assert.notNull(user_id,"用户不能为空");
+        User user = userDao.getUserById(user_id);
+        Assert.notNull(user,"用户不存在");
+        boolean result = relationDao.deleteRelationBuUser_id(user_id)>0;
 
         return result;
     }
@@ -66,9 +90,13 @@ public class RelationServiceImpl {
         return  relation;
     }
     /*
-    * 获取用户好友列表
+    * 获取用户所有好友列表
     * */
     public List<Relation> queryRelationList(String user_id){
+        Assert.notNull(user_id,"找不到用户");
+        List<Relation> list = relationDao.queryRelationByUser_id(user_id);
+        Assert.notNull(list ,"该用户不存在");
 
+        return list;
     }
 }

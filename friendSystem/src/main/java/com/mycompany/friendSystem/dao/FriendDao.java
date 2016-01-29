@@ -12,5 +12,7 @@ public interface FriendDao {
     public int insertFriend(Friend friend);
     public int updateFriend(Friend friend);
     public int deleteFriendById(String id);
-    public List<Friend> getFriendByRelation_id( String relation_id);
+    public int deleteFriendBuRelation_id(String relation_id);
+    public Friend getFriendById(String id);
+    public List<Friend> queryFriendByRelation_id( String relation_id);
 }

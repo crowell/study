@@ -22,13 +22,13 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     @Resource
-    public UserDao userDao;
+    UserDao userDao;
 
     @Resource
-    public RelationDao relationDao;
+    RelationDao relationDao;
 
     @Resource
-    private JedisPool jedisPool;
+    JedisPool jedisPool;
     /*
     * 创建新用户
     * */

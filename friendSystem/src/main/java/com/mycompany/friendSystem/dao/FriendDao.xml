@@ -13,7 +13,14 @@
         DELETE FROM friend WHERE id=#{id}
     </delete>
 
-    <select id="getFriendByRelation_id" parameterType="String"
+    <delete id="deleteFriendBuRelation_id" parameterType="String">
+        DELETE FROM friend WHERE relation_id=#{relation_id}
+    </delete>
+
+    <select id="getFriendById" parameterType="String">
+        SELECT * FROM friend WHERE id=#{id}
+    </select>
+    <select id="queryFriendByRelation_id" parameterType="String"
             resultType="com.mycompany.friendSystem.model.Relation">
         SELECT * FROM friend WHERE relation_id=#{relation_id}
     </select>

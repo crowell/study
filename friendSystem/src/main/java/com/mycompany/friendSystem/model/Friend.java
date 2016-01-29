@@ -1,9 +1,11 @@
 package com.mycompany.friendSystem.model;
 
+import java.io.Serializable;
+
 /**
  * Created by JinBingBing on 2016/1/27.
  */
-public class Friend {
+public class Friend implements Serializable {
     private String id;
     private String friend_id;
     private String relation_id;

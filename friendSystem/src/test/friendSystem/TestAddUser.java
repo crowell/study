@@ -15,6 +15,9 @@ import javax.annotation.Resource;
  */
 public class TestAddUser extends BaseJunit4Test{
 
+    @Resource
+    UserService userService;
+
     @Test   //标明是测试方法
     @Transactional   //标明此方法需使用事务
     @Rollback(false) //标明使用完此方法后事务不回滚,true时为回滚
@@ -25,6 +28,7 @@ public class TestAddUser extends BaseJunit4Test{
         user.setName("呵呵");
         user.setSex("男");
         user.setAge(15);
+
     }
 
 }

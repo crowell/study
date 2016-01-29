@@ -1,5 +1,6 @@
 package com.mycompany.friendSystem.controller;
 
+import com.mycompany.friendSystem.service.RelationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,12 @@ public class userController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    RelationService relationService;
+
+    @Autowired
+    RelationService re
 
     @RequestMapping(value="/add",produces = {"application/json;charset=UTF-8"})
     @ResponseBody
