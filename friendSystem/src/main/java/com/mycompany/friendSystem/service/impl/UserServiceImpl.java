@@ -1,12 +1,14 @@
 package com.mycompany.friendSystem.service.impl;
 
+import com.mycompany.friendSystem.commons.FriendListName;
 import com.mycompany.friendSystem.commons.SerializingUtil;
 import com.mycompany.friendSystem.commons.UUIDUtil;
-import com.mycompany.friendSystem.dao.RelationDao;
 import com.mycompany.friendSystem.dao.UserDao;
 import com.mycompany.friendSystem.model.Relation;
 import com.mycompany.friendSystem.model.User;
+import com.mycompany.friendSystem.service.RelationService;
 import com.mycompany.friendSystem.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import redis.clients.jedis.Jedis;
@@ -24,8 +26,8 @@ public class UserServiceImpl implements UserService {
     @Resource
     UserDao userDao;
 
-    @Resource
-    RelationDao relationDao;
+    @Autowired
+    RelationService relationService;
 
     @Resource
     JedisPool jedisPool;
@@ -44,12 +46,12 @@ public class UserServiceImpl implements UserService {
         	Relation r1 = new Relation();
         	Relation r2 = new Relation();
         	Relation r3 = new Relation();
-        	DefaultRelation.getDefaultRelationShip("我的好友", user, r1);
-        	DefaultRelation.getDefaultRelationShip("黑名单", user, r2);
-        	DefaultRelation.getDefaultRelationShip("陌生人", user, r3);
-            relationDao.insertRelation(r1);
-            relationDao.insertRelation(r2);
-            relationDao.insertRelation(r3);
+        	DefaultRelation.getDefaultRelationShip(FriendListName.getName(1), user, r1);
+        	DefaultRelation.getDefaultRelationShip(FriendListName.getName(2), user, r2);
+        	DefaultRelation.getDefaultRelationShip(FriendListName.getName(3), user, r3);
+            relationService.insertRelation(r1);
+            relationService.insertRelation(r2);
+            relationService.insertRelation(r3);
         }
         return result;
     }
@@ -62,11 +64,11 @@ public class UserServiceImpl implements UserService {
         Jedis jedis = jedisPool.getResource();
         byte[] bytes = jedis.get(SerializingUtil.serialize(user.getId()));
         byte[] bytes1 = jedis.get(SerializingUtil.serialize(user.getUsername()));
-        if (bytes!=null)
-            jedis.del(SerializingUtil.serialize(user.getId()));
-        if(bytes1!=null)
-            jedis.del(SerializingUtil.serialize(user.getUsername()));
         boolean result = userDao.updateUser(user) > 0;
+        if (bytes!=null&&result)
+            jedis.del(SerializingUtil.serialize(user.getId()));
+        if(bytes1!=null&&result)
+            jedis.del(SerializingUtil.serialize(user.getUsername()));
 
         return result;
     }
@@ -80,13 +82,16 @@ public class UserServiceImpl implements UserService {
         Jedis jedis = jedisPool.getResource();
         byte[] bytes = jedis.get(SerializingUtil.serialize(id));
         byte[] bytes1 = jedis.get(SerializingUtil.serialize(user.getUsername()));
-        if (bytes != null) {
+        boolean result = userDao.deleteUserById(id)>0;
+        if (bytes != null&&result) {
             jedis.del(SerializingUtil.serialize(id));
         }
-        if(bytes1!=null) {
+        if(bytes1!=null&&result) {
             jedis.del(SerializingUtil.serialize(user.getUsername()));
         }
-        boolean result = userDao.deleteUserById(id)>0;
+        if(result){
+            result = relationService.deleteRelationByUser_id(id);
+        }
 
         return result;
     }
@@ -135,6 +140,9 @@ public class UserServiceImpl implements UserService {
 
         return  list;
     }
+    /*
+    * 通过部分信息的部分内容查找对应用户群
+    * */
     public List<User> queryUserByCondition(String queryCondition){
         Assert.notNull(queryCondition,"查询内容不能为空");
         List<User> list = userDao.selectUserByCondition(queryCondition);

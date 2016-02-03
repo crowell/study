@@ -1,5 +1,6 @@
 package com.mycompany.friendSystem.service.impl;
 
+import com.mycompany.friendSystem.commons.SerializingUtil;
 import com.mycompany.friendSystem.commons.UUIDUtil;
 import com.mycompany.friendSystem.dao.FriendDao;
 import com.mycompany.friendSystem.dao.RelationDao;
@@ -8,7 +9,11 @@ import com.mycompany.friendSystem.model.Friend;
 import com.mycompany.friendSystem.model.Relation;
 import com.mycompany.friendSystem.model.User;
 import com.mycompany.friendSystem.service.RelationService;
+
+import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -16,6 +21,7 @@ import java.util.*;
 /**
  * Created by JinBingBing on 2016/1/28.
  */
+@Service
 public class RelationServiceImpl implements RelationService{
 
     @Resource
@@ -26,6 +32,9 @@ public class RelationServiceImpl implements RelationService{
 
     @Resource
     FriendDao friendDao;
+
+    @Resource
+    JedisPool jedisPool;
     /*
     * 新建好友列表
     * */
@@ -51,7 +60,17 @@ public class RelationServiceImpl implements RelationService{
         Assert.notNull(relation,"列表不存在");
         List<Friend> friendList = friendDao.queryFriendByRelation_id(id);
         Assert.isNull(friendList,"分组不为空，无法删除");
+        Jedis jedis = jedisPool.getResource();
+        byte[] bytes = jedis.get(SerializingUtil.serialize(id));
+        byte[] bytes1 = jedis.get(SerializingUtil.serialize(relation.getUser_id()+"_list"));
         boolean result = relationDao.deleteRelationById(id)>0;
+        if (bytes!=null&&result){
+            jedis.del(SerializingUtil.serialize(id));
+        }
+        if(bytes1!=null&&result){
+            List<Relation> relationList = (List<Relation>) SerializingUtil.deserialize(bytes1);
+
+        }
 
         return result;
     }
@@ -63,7 +82,10 @@ public class RelationServiceImpl implements RelationService{
         User user = userDao.getUserById(user_id);
         Assert.notNull(user,"用户不存在");
         boolean result = relationDao.deleteRelationBuUser_id(user_id)>0;
-
+        List<Relation> relationList = queryRelationList(user_id);
+        for (int i = 0;i<relationList.size();i++){
+            friendDao.deleteFriendBuRelation_id(relationList.get(i).getId());
+        }
         return result;
     }
     /*

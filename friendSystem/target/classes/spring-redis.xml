@@ -7,7 +7,7 @@
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
 	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
 	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
-	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd" >
     <context:component-scan base-package="com.mycompany.friendSystem.service" />
     <!-- <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         使用location属性定义单个配置文件
@@ -39,4 +39,5 @@
         <constructor-arg index="3" value="3000" type="int"/>
         <!-- <constructor-arg index="4" value="${redis.password}"/> -->
     </bean>
+
 </beans>

@@ -1,5 +1,6 @@
 package com.mycompany.friendSystem.controller;
 
+import com.mycompany.friendSystem.service.FriendService;
 import com.mycompany.friendSystem.service.RelationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,24 +15,22 @@ import com.mycompany.friendSystem.service.UserService;
  * Created by JinBingBing on 2016/1/27.
  */
 @Controller
-@RequestMapping("/friendSystem")
+@RequestMapping("/userSystem")
 public class userController {
 
     @Autowired
     UserService userService;
-
-    @Autowired
-    RelationService relationService;
-
-    @Autowired
-    RelationService re
 
     @RequestMapping(value="/add",produces = {"application/json;charset=UTF-8"})
     @ResponseBody
     public Object addUser(User user){
 		JsonReport jr = new JsonReport();
 		try{
-			userService.addUser(user);
+			boolean result = userService.addUser(user);
+			if(!result){
+				jr.setSuccess(false);
+				jr.setErrorMsg("连接数据库失败");
+			}
 			jr.setData(userService.getUser(user.getId()));
 		}catch(Exception e){
 			jr.setSuccess(false);
@@ -45,7 +44,11 @@ public class userController {
     public Object updateUser(User user){
     	JsonReport jr = new JsonReport();
     	try{
-    		userService.updateUser(user);
+    		boolean result = userService.updateUser(user);
+			if(!result){
+				jr.setSuccess(false);
+				jr.setErrorMsg("连接数据库失败");
+			}
     		jr.setData(userService.getUser(user.getId()));
     	}catch(Exception e){
     		jr.setSuccess(false);
@@ -60,7 +63,11 @@ public class userController {
     	JsonReport jr = new JsonReport();
     	String s = "删除成功";
     	try{
-    		userService.deleteUser(id);
+    		boolean result = userService.deleteUser(id);
+			if(!result){
+				jr.setSuccess(false);
+				jr.setErrorMsg("连接数据库失败");
+			}
     		jr.setData(s);
     	}catch(Exception e){
     		jr.setSuccess(false);
@@ -99,7 +106,7 @@ public class userController {
     @ResponseBody
     public Object getUserById(String id){
     	JsonReport jsonReport = new JsonReport();
-    	User user = null;
+    	User user;
     	try{
     		user = userService.getUser(id);
     		jsonReport.setData(user);
@@ -114,7 +121,7 @@ public class userController {
     @ResponseBody
     public Object getUserByUsername(String username){
     	JsonReport jsonReport = new JsonReport();
-    	User user = null;
+    	User user;
     	try{
     		user = userService.getUserByUsername(username);
     		jsonReport.setData(user);
