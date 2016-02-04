@@ -42,6 +42,10 @@ public class FriendServiceImpl implements FriendService{
         String user_id = friend.getFriend_id();
         User user = userDao.getUserById(user_id);
         Assert.notNull(user,"添加好友失败，该用户不存在");
+        String relation_id = friend.getRelation_id();
+        List<Friend> friendList = friendDao.queryFriendByRelation_id(relation_id);
+        List<String> friend_idlist = FriendTools.getFriend_idList(friendList);
+        Assert.isTrue(!friend_idlist.contains(user_id),"好友已存在，无需添加");
         friend.setId(UUIDUtil.getUUID());
         boolean result = friendDao.insertFriend(friend)>0;
 

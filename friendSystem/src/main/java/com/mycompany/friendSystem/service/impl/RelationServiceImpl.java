@@ -39,13 +39,13 @@ public class RelationServiceImpl implements RelationService{
     * 新建好友列表
     * */
     public boolean insertRelation(Relation relation){
-        String user_id = relation.getId();
+        String user_id = relation.getUser_id();
         Assert.notNull(user_id,"创建列表失败");
         String relationship =  relation.getRelationship();
         List<Relation> list = relationDao.queryRelationByUser_id(user_id);
         List<String> relationshipList = new ArrayList<String>();
         UserFriendList.getRelationship(list,relationshipList);
-        Assert.isNull(relationshipList.contains(relationship),"好友列表已存在");
+        Assert.isTrue(!relationshipList.contains(relationship),"好友列表已存在");
         relation.setId(UUIDUtil.getUUID());
         boolean result = relationDao.insertRelation(relation)>0;
 

@@ -76,6 +76,37 @@ public class userController {
     	}
     	return jr;
     }
+	@RequestMapping(value="/getUser",produces ={"application/json;charset=UTF-8"})
+	@ResponseBody
+	public Object getUserById(String id){
+		JsonReport jsonReport = new JsonReport();
+		User user;
+		try{
+			user = userService.getUser(id);
+			jsonReport.setData(user);
+		}catch(Exception e){
+			jsonReport.setSuccess(false);
+			jsonReport.setData("error");
+			jsonReport.setErrorMsg(e.getMessage());
+		}
+		return jsonReport;
+	}
+	@RequestMapping(value="/getUserByUserName",produces ={"application/json;charset=UTF-8"})
+	@ResponseBody
+	public Object getUserByUsername(String username){
+		JsonReport jsonReport = new JsonReport();
+		User user;
+		try{
+			user = userService.getUserByUsername(username);
+			jsonReport.setData(user);
+		}catch(Exception e){
+			jsonReport.setSuccess(false);
+			jsonReport.setData("error");
+			jsonReport.setErrorMsg(e.getMessage());
+		}
+		return jsonReport;
+
+	}
     @RequestMapping(value="/queryUser",produces ={"application/json;charset=UTF-8"})
     @ResponseBody
     public Object queryUserList(User user){
@@ -101,37 +132,6 @@ public class userController {
     		jsonReport.setErrorMsg(e.getMessage());
     	}
     	return jsonReport;
-    }
-    @RequestMapping(value="/getUser",produces ={"application/json;charset=UTF-8"})
-    @ResponseBody
-    public Object getUserById(String id){
-    	JsonReport jsonReport = new JsonReport();
-    	User user;
-    	try{
-    		user = userService.getUser(id);
-    		jsonReport.setData(user);
-    	}catch(Exception e){
-    		jsonReport.setSuccess(false);
-    		jsonReport.setData("error");
-    		jsonReport.setErrorMsg(e.getMessage());
-    	}
-    	return jsonReport;
-    }
-    @RequestMapping(value="/getUserByUserName",produces ={"application/json;charset=UTF-8"})
-    @ResponseBody
-    public Object getUserByUsername(String username){
-    	JsonReport jsonReport = new JsonReport();
-    	User user;
-    	try{
-    		user = userService.getUserByUsername(username);
-    		jsonReport.setData(user);
-    	}catch(Exception e){
-    		jsonReport.setSuccess(false);
-    		jsonReport.setData("error");
-    		jsonReport.setErrorMsg(e.getMessage());
-    	}
-    	return jsonReport;
-    	
     }
 
 }
